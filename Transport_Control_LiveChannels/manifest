@@ -1,0 +1,26 @@
+#
+#  Copyright (c) 2016 Roku, Inc. All rights reserved.
+#  Roku Channel Manifest File
+#  Full spec at bit.ly/roku-manifest-file
+#
+
+# Channel Details
+title=MultiLiveTransportControl
+major_version=1
+minor_version=0
+build_version=245
+
+# Channel Assets
+mm_icon_focus_hd=pkg:/images/channel-poster.png
+splash_screen_fhd=pkg:/images/channel-splash.png
+splash_color=#808080
+splash_min_time=1500
+supports_etc_seek=1
+
+# Roku Ad Framework Meta Data
+requires_audiometadata=1
+bs_libs_required=roku_ads_lib
+
+
+# Resolution
+ui_resolutions=fhd
