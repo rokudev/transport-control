@@ -12,7 +12,7 @@ This sample includes standard and custom video player channels and a live channe
 
 ### Transport control components
 
-The **InputTask** component listens for **roInputEvent** events to check whether a transport control has been received. When one is received, it updates a global variable being monitored by the **ExtVideoPlayerUI** component. 
+The **InputTask** component listens for **roInputEvent** events to check whether a transport control has been received. When one is received, it updates a global variable being monitored by the **ExtVideoPlayerUI** and **customVid** components in the custom UI and live channels, respectively. 
 
 The **ExtVideoPlayerUI** component in the custom UI channel and the **customVid** component in the live channel take the transport event and pass it to a method that processes it based on its type. The channels explicitly handle "seek" and "start over" commands, which is required for implementing custom trick mode, while letting the Roku OS implicitly handle "fast forward", "rewind", and "replay" commands. The channels then display the updated position on the progress bar, and the control button corresponding to the event being executed.
 
