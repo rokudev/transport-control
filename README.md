@@ -4,15 +4,15 @@
 
 This sample demonstrates how to handle voice commands in your channel. It shows you how to use the [**roInputEvent**](https://developer.roku.com/docs/references/brightscript/events/roinputevent.md) to listen for transport events and then process them. 
 
-This sample includes standard and custom video player channels, a live channel, and a channel implementing server-side ad insertion (SSAI) via the Roku Advertising Framework (RAF): 
+This sample includes standard and custom video player channels, a live channel, and a channel implementing server-side ad insertion [SSAI](https://developer.roku.com/docs/developer-program/advertising/ssai-adapters.md) via the [Roku Advertising Framework (RAF)](https://developer.roku.com/docs/developer-program/advertising/roku-advertising-framework.md): 
 
 - The standard UI channel shows how the native Roku Media Player handles transport controls.  You can run this channel and use the [debug console](https://developer.roku.com/docs/developer-program/debugging/debugging-channels.md) to view output related to transport events. 
 
-- The custom UI, live, and SSAI channels shows how your application can receive and process transport controls. This is especially important if your channel uses custom [trick mode](https://developer.roku.com/docs/developer-program/media-playback/trick-mode.md) or it is using a [SSAI](https://developer.roku.com/docs/developer-program/advertising/ssai-adapters.md) implementation of the [Roku Advertising Framework (RAF)](https://developer.roku.com/docs/developer-program/advertising/roku-advertising-framework.md) because your channel must explicitly handle "seek" and "start over" transport commands in these cases.   
+- The custom UI, live, and SSAI channels shows how your application can receive and process transport controls. This is especially important if your channel uses custom [trick mode](https://developer.roku.com/docs/developer-program/media-playback/trick-mode.md) or it is using a RAF SSAI implementation because your channel must explicitly handle "seek" and "start over" transport commands in these cases.   
 
 ### Transport control components
 
-The **InputTask** component listens for **roInputEvent** events to check whether a transport control has been received. When one is received, it updates a global variable being monitored by the **ExtVideoPlayerUI** component in the custom UI and RAF SSAI channels and the **customVid** component in the live channel. 
+The **InputTask** component listens for **roInputEvent** events to check whether a transport control has been received. When one is received, it updates a global variable being monitored by the **ExtVideoPlayerUI** component in the custom UI and SSAI channels and the **customVid** component in the live channel. 
 
 These components take the transport event and pass it to a method that processes it based on its type. The channels explicitly handle "seek" and "start over" commands, which is required for implementing custom trick mode, while letting the Roku OS implicitly handle "fast forward", "rewind", and "replay" commands. The channels then display the updated position on the progress bar, and the control button corresponding to the event being executed.
 
