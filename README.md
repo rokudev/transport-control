@@ -30,7 +30,7 @@ To run this sample, follow these steps:
 
 1. Download and then extract the sample.
 
-2. In the extracted **transport-control-master** folder, expand the folder containing the sample you wan to run:  **Transport_Control_NativeUI**,  **Transport_Control_CustomUI**, or **Transport_Control_LiveChannels**. Compress the contents in the expanded folder to a ZIP file.
+2. In the extracted **transport-control-master** folder, expand the folder containing the sample you wan to run:  **Transport_Control_NativeUI**,  **Transport_Control_CustomUI**, **Transport_Control_LiveChannels**, or **Transport_Control_RAFSSAI_JPEG**. Compress the contents in the expanded folder to a ZIP file.
 
 3.  Follow the steps in [Loading and Running Your Application](https://developer.roku.com/en-gb/docs/developer-program/getting-started/developer-setup.md#step-1-set-up-your-roku-device-to-enable-developer-settings) to enable developer mode on your device and sideload the ZIP file containing the sample onto it.
 
