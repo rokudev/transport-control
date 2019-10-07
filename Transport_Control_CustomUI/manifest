@@ -1,6 +1,7 @@
 title=TransportControlSample
+subtitle=CustomUI
 major_version=1
-minor_version=0
+minor_version=1
 build_version=0
 mm_icon_focus_hd=pkg:/images/channel-poster.png
 mm_icon_focus_sd=pkg:/images/channel-poster.png
@@ -8,4 +9,5 @@ splash_screen_fhd=pkg:/images/channel-splash.png
 ui_resolutions=fhd
 supports_input_launch=1
 supports_etc_seek=1
+supports_etc_next=1
 rsg_version=1.2
