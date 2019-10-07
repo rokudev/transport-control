@@ -23,9 +23,11 @@ Sub init()
     m.VideoContent = createObject("roSGNode", "ContentNode")
     m.RowList.observeField("rowItemSelected", "playVideo")
 
+    ' so we can use next video in playlist'
+    m.Video.contentIsPlaylist = true
+
     ' Node for RALE tool'
     'm.tracker = m.top.createChild("TrackerTask")
-
 End Sub
 
 sub indexloaded(msg as Object)
@@ -113,7 +115,7 @@ End Sub
 Sub playVideo(url = invalid)
     ? "url= "; url
     if type(url) = "roSGNodeEvent"   ' passed from observe callback'
-        m.videoContent.url = m.RowList.content.getChild(m.RowList.rowItemFocused[0]).getChild(m.RowList.rowItemFocused[1]).URL
+        m.videoContent = m.RowList.content.getChild(m.RowList.rowItemFocused[0])
         'rowItemFocused[0] is the row and rowItemFocused[1] is the item index in the row
     else
         m.videoContent.url = url
@@ -125,6 +127,12 @@ Sub playVideo(url = invalid)
     m.Video.content = m.videoContent
     m.Video.visible = "true"
     m.Video.control = "play"
+    column = m.RowList.rowItemFocused[1]
+    ' avoid double loading bar if it is first item'
+    if column > 0
+      m.video.nextContentIndex = column
+      m.Video.control = "skipcontent"
+    end if
 
     m.Video.setFocus(true)
 
@@ -157,7 +165,6 @@ end Function
 Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back button to leave video
     if press
       print "pressed key="; key
-      'm.Video.visible = false
         if key = "back"  'If the back button is pressed
             if m.Video.visible
                 returnToUIPage()

@@ -360,7 +360,6 @@ Function handleTransport(evt as object) as String
         if m.lastCmd = "forward" or m.lastCmd = "rewind" ' only allow seeking when not fast forwarding or rewinding
             ret = "error"
         else
-            'm.ExtVideo.control = "pause"
             duration = evt.duration.ToInt()
             seekPosition = m.ExtVideo.position
             if (evt.direction = "backward") then
@@ -374,17 +373,12 @@ Function handleTransport(evt as object) as String
             else if (seekPosition < 0) then
                 ret = "success.seek-start"
                 seekPosition = 0
-            else
-                seekPosition = seekPosition
             end if
-            ? "handleTransport() seek position= "; seekPosition
             m.ExtVideo.seek = seekPosition
             if isSeeking() and m.ExtVideo.state <> "paused"
-                ? "handleTransport() - isSeeking "
                 showLoadingBar()
                 endSeeking()
             else
-                ? "handleTransport() - not isSeeking "
                 hideProgressBar()
             end if
         end if
@@ -405,11 +399,11 @@ Function handleTransport(evt as object) as String
     else if (cmd = "pause" or cmd = "stop") and (m.lastCmd = "forward" or m.lastCmd = "rewind") ' handle pause in cases where the user is moving but position isn't being updated
         resetSeekLogic()
         m.ExtVideo.control = "pause"
-        m.ExtVideo.state = "paused"
+        position = m.trickPosition * m.trickInterval
+        pauseSeeking("pause", position)
+        showProgressBar(position)
         setProgressMode()
     else if cmd = "pause" or cmd = "stop"
-        REM - TODO: BIF player behavior: OK key only works during trick play
-        ? "Hit stop key in state: "; m.ExtVideo.state
         if (m.ExtVideo.state = "paused")
             ret = "error.redundant"
         else if isSeeking()
@@ -421,19 +415,20 @@ Function handleTransport(evt as object) as String
         showProgressBar(position)
         m.ExtVideo.control = "pause"
     else if cmd = "play" or cmd = "resume"
-        ? "Hit play key in state: "; m.ExtVideo.state
         if m.ExtVideo.state <> "playing"
-            m.trickplayDirection = "playing"
-            m.ExtVideo.control = "resume"
             if isSeeking()
                 showLoadingBar()
                 endSeeking()
             else
+                m.ExtVideo.control = "resume"
                 hideProgressBar()
             end if
         else
             ret = "error.redundant"
         end if
+    else if cmd = "next"
+        ' skip to next content in playlist'
+        m.ExtVideo.control = "skipcontent"
     else
         ret = "unhandled"
     end if
@@ -441,7 +436,6 @@ Function handleTransport(evt as object) as String
     ret = "error.no-media"
   end if
   m.lastCmd = cmd
-  ? "return from handleTransport()"
   return ret
 end Function
 
@@ -478,26 +472,20 @@ Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back butt
         pauseSeeking(key, position)
       else if key = "play" or key = "OK"
           if m.ExtVideo.state = "playing"
-              REM - TODO: BIF player behavior: OK key only works during trick play
-              ? "Hit play key in state: "; m.ExtVideo.state
+              m.initPos = m.ExtVideo.position
               showProgressBar(m.ExtVideo.position)
               m.ExtVideo.control = "pause"
-              ''? "pausing video"
           else
-              ? "Hit play key in state: "; m.ExtVideo.state
-              m.ExtVideo.control = "resume"
-              m.trickplayDirection = "playing"
               if isSeeking()
                   showLoadingBar()
                   endSeeking()
               else
+                  m.ExtVideo.control = "resume"
                   hideProgressBar()
+                  hideThumbnails()
               end if
           end if
       else if key = "back"
-          ' ExtVideo only focused when visible, exit'
-          'm.ExtVideo.visible = false
-          'm.ExtVideo.control = "stop"
           return false
       end if
     end if

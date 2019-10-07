@@ -24,6 +24,7 @@
 	</Group>
 
   <Group id="loading" translation="[740,760]">
+    <Label id="loadingLabel" text="Loading..." translation="[100,-80]"/>
     <Rectangle id="loadOutlineRect" width="400" height="20" color="0xFFFFFFFF" opacity="0.1"/>
     <Rectangle id="loadProgressRect" width="1" height="20"/>
   </Group>
