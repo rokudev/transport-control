@@ -22,6 +22,8 @@ Sub init()
     m.VideoContent = createObject("roSGNode", "ContentNode")
     m.RowList.observeField("rowItemSelected", "playVideo")
 
+    ' so we can use next video in playlist'
+    m.Video.contentIsPlaylist = true
 End Sub
 
 sub indexloaded(msg as Object)
@@ -47,6 +49,27 @@ Function handleDeepLink(deeplink as object)
   end if
 end Function
 
+#if enableNextCmd
+' A bare minimum handleTransport() function, only handles next command'
+Function handleTransport(evt as Object) as String
+  ret = "unhandled"
+  if validateTransportControl(evt) and m.Video.visible = true
+    ret = "success"
+    cmd = evt.command
+    if cmd = "next"
+        ' skip to next content in playlist'
+        m.Video.control = "skipcontent"
+    else
+        ' any transport control command other than next is handled in firmware'
+        ret = "unhandled"
+    end if
+  else
+    ret = "error.no-media"
+  end if
+  return ret
+end Function
+#end if
+
 sub handleInputEvent(msg)
     ? "in handleInputEvent()"
     if type(msg) = "roSGNodeEvent" and msg.getField() = "inputData"
@@ -54,6 +77,11 @@ sub handleInputEvent(msg)
         if inputData <> invalid
           if inputData.type = "deeplink"
             handleDeepLink(inputData)
+          #if enableNextCmd
+          else
+            ret = handleTransport(inputData)
+            m.InputTask.transportResponse = {id: inputData.id, status: ret}
+          #end if
           end if
         end if
     end if
@@ -104,12 +132,14 @@ Sub changeContent()  'Changes info to be displayed on the overhang
     'm.Poster.uri = contentItem.HDPOSTERURL  'Sets overhang image to the image of the focused item
     m.Title.text = contentItem.TITLE  'Sets overhang title to the title of the focused item
     m.Description.text = contentItem.DESCRIPTION  'Sets overhang description to the description of the focused item
+    ? "row= "; m.RowList.rowItemFocused[0]
+    ? "column= "; m.RowList.rowItemFocused[1]
 End Sub
 
 Sub playVideo(url = invalid)
     ? "url= "; url
     if type(url) = "roSGNodeEvent"   ' passed from observe callback'
-        m.videoContent.url = m.RowList.content.getChild(m.RowList.rowItemFocused[0]).getChild(m.RowList.rowItemFocused[1]).URL
+        m.videoContent = m.RowList.content.getChild(m.RowList.rowItemFocused[0])
         'rowItemFocused[0] is the row and rowItemFocused[1] is the item index in the row
     else
         m.videoContent.url = url
@@ -119,8 +149,15 @@ Sub playVideo(url = invalid)
     keepPlaying = false
 
     m.Video.content = m.videoContent
+
     m.Video.visible = "true"
     m.Video.control = "play"
+    column = m.RowList.rowItemFocused[1]
+    ' avoid double loading bar if it is first item'
+    if column > 0
+      m.video.nextContentIndex = column
+      m.Video.control = "skipcontent"
+    end if
 
     m.Video.setFocus(true)
 
@@ -153,6 +190,8 @@ end Function
 Function onVideoPositionChanged(msg as Object)
   if type(msg) = "roSGNodeEvent" and msg.getField() = "position"
       position = msg.getData()
+      ? "contentIndex = "; m.video.contentIndex
+      ? "nextcontentIndex= "; m.video.nextcontentindex
       ? "onVideoPositionChanged() position= "; position
   end if
 end Function
@@ -160,7 +199,6 @@ end Function
 Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back button to leave video
     if press
       print "pressed key="; key
-      'm.Video.visible = false
         if key = "back"  'If the back button is pressed
             if m.Video.visible
                 returnToUIPage()

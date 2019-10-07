@@ -11,7 +11,11 @@ function ListenInput()
 
     InputObject=createobject("roInput")
     InputObject.setmessageport(m.port)
-
+    #if enableNextCmd
+      if m.global.version >= "910"
+        InputObject.enableTransportEvents()
+      end if
+    #end if
     while true
       msg=m.port.waitmessage(500)
       if type(msg)="roInputEvent" then
@@ -32,6 +36,7 @@ function ListenInput()
             }
             print "got input deeplink= "; deeplink
             m.top.inputData = deeplink
+          #if enableNextCmd
           else if m.global.version >= "910" and inputData.DoesExist("type") and inputData.type = "transport"
             transport = {
                 id: inputData.id
@@ -44,8 +49,10 @@ function ListenInput()
             m.transportIdList[inputData.id] = {transport: transport}
             ? "id list size= "; m.transportIdList.count()
             m.top.inputData = transport
+          #end if
           end if
         end if
+      #if enableNextCmd
       else if type(msg) = "roSGNodeEvent"
         if msg.getField() = "transportResponse"
             response = msg.getData()
@@ -61,8 +68,8 @@ function ListenInput()
             else
                 ? "id= "; id; " not found"
             end if
-
         end if
+      #end if
       end if
     end while
 end function
