@@ -16,6 +16,23 @@
         width = "1920"
         color = "0x000000FF"
         opacity = "0.7"/>
+        <Poster
+          id = "UserPoster"
+          uri="pkg:/images/avatars/person_symbol.jpg"
+          height = "128"
+          width = "128"
+          loadWidth = "128"
+          loadHeight = "128"
+          loadDisplayMode = "scaleToFit"
+          translation = "[1600,50]"
+          visible="false"/>
+        <Label
+          id="userpostertext"
+          font="font:SmallSystemFont"
+          translation="[1600,180]"
+          color="0xebebebff"
+          text=""
+          visible="false"/>
 
     <!-- RowList node -->
     <RowList
@@ -30,20 +47,17 @@
         focusXOffset = "[50]"
         showRowLabel= "[true]"
         rowFocusAnimationStyle= "floatingfocus"
-    />
-
+        visible="false"/>
     <ExtVideoPlayerUI
         id = "Video"
-        visible = "false"
-    />
-
-
+        visible = "false"/>
     <!-- Shaded overhang to display the focused content in the RowList -->
     <Rectangle
         id = "Overhang"
         height = "400"
         width = "1920"
-        color = "0x00000080" >
+        color = "0x00000080"
+        visible="false">
 
         <!-- Passed into a group node to make the formatting easier. All child nodes inherit the translation field of Group -->
 	    <Group translation = "[150,75]">
@@ -52,7 +66,8 @@
 	      id = "Title"
 	      height = "30"
 	      width = "650"
-	      font = "font:LargeBoldSystemFont"/>
+	      font = "font:LargeBoldSystemFont"
+        visible="false"/>
 	    <!-- Content description of the item focused . Also inherits translation from Group node -->
 	    <Label
 	      id = "Description"
@@ -60,7 +75,8 @@
 	      width = "800"
 	      color = "0xA3A3C2FF"
 	      translation = "[0,75]"
-	      wrap = "true"/>
+	      wrap = "true"
+        visible="false"/>
 	    <!-- Artwork of the item focused. Inherits translation of the Group node and adds onto the translation. Final translation on the screen is [150+850, 75+10] -->
 	    <Poster
 	      id = "Poster"
@@ -69,8 +85,10 @@
 	      loadWidth = "500"
 	      loadHeight = "281"
 	      loadDisplayMode = "scaleToFit"
-	      translation = "[850,10]"/>
+	      translation = "[850,10]"
+        visible="false"/>
 	    </Group>
+
     </Rectangle>
 
     <Animation
@@ -94,7 +112,28 @@
         key = "[ 0.0, 1.0 ]"
         keyValue = "[ [0.0,-400.0], [0.0,0.0] ]"
         fieldToInterp = "Overhang.translation" />
-
     </Animation>
+
+
+
+
+
+    <Label
+      id="USX"
+      font="font:MediumSystemFont"
+      translation="[45,250]"
+      color="0xebebebff"
+      text="Select a User"/>
+    <MarkupGrid
+      id = "exampleMarkupGrid"
+      translation = "[ 200, 440 ]"
+      itemComponentName = "MarkupGridItem"
+      numColumns = "5"
+      numRows = "1"
+      itemSize = "[ 200, 200 ]"
+      itemSpacing = "[ 20, 20 ]"
+      drawFocusFeedback = "true"
+      visible="true"/>
+
     </children>
 </component>

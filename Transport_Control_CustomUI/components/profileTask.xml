@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component name="profileTask" extends="Task">
+    <interface>
+            <field id = "content" type = "node" />
+            <field id=  "inputSelectData" type="assocarray" />
+            <field id= "transportResponse" type="boolean" />
+            <field id= "handledState" type="string" />
+            <field id= "contenturi" type = "uri" />
+            <field id=  "userindex" type="int" />
+            <field id=  "deeplinked" type="assocarray" />
+    </interface>
+
+    <script type="text/brightscript" uri="pkg:/components/profileTask.brs" />
+</component>

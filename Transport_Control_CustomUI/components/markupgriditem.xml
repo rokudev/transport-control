@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "MarkupGridItem" extends = "Group" >
+
+  <interface>
+    <field id = "itemContent" type = "node" onChange = "showcontent"/>
+    <field id = "focusPercent" type = "float" onChange = "showfocus"/>
+  </interface>
+
+  <script type="text/brightscript" uri="pkg://components/markupgriditem.brs"/>
+
+  <children>
+      <Poster id="itemPoster" translation="[0,0]" width="200" height="200" />
+      <Rectangle
+        id="textbkg"
+        color="#555555FF"
+        width="200"
+        height="30"
+        translation="[0,172]" />
+      <Label id="itemText" font="font:MediumSystemFont" translation="[0,169]" color="0xebebebff" />
+  </children>
+
+</component>

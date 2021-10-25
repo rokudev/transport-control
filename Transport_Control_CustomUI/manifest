@@ -1,13 +1,17 @@
+# this app requires firmware 10.5
 title=TransportControlSample
-subtitle=CustomUI
+subtitle=New Voice Features Sample
 major_version=1
 minor_version=1
-build_version=0
-mm_icon_focus_hd=pkg:/images/channel-poster.png
-mm_icon_focus_sd=pkg:/images/channel-poster.png
-splash_screen_fhd=pkg:/images/channel-splash.png
+build_version=101
+mm_icon_focus_hd=pkg:/images/channel-poster_hd.png
+mm_icon_focus_sd=pkg:/images/channel-poster_sd.png
+splash_screen_fhd=pkg:/images/splash-screen_fhd.jpg
+splash_screen_hd=pkg:/images/splash-screen_hd.jpg
+splash_screen_sd=pkg:/images/splash_screen_sd.jpg
 ui_resolutions=fhd
 supports_input_launch=1
 supports_etc_seek=1
 supports_etc_next=1
 rsg_version=1.2
+voice_action_launch_screen=1

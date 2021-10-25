@@ -3,12 +3,15 @@
 Function init()
     'set video node'
     m.ExtVideo = m.top
+    m.video=m.top.findnode("video")
     m.top.observeField("state", "handleStateChange")
     m.top.observeField("bufferingStatus", "handleBufferingStatus")
-
+    'init roAppManager Thread for NowPlaying response'
+    m.appmanager=createobject("roSGNode","appman")
+    m.appmanager.control="RUN"
+    
     initProgressBar()
-    initThumbnails()  ' hostPefix and trickInterval are passed in from interface fields'
-
+    initThumbnails()  ' hostPrefix and trickInterval are passed in from interface fields'
     initLoadingBar()
 
 end Function
@@ -340,7 +343,13 @@ Function handleBufferingStatus(msg)
 end Function
 
 Function handleTransport(evt as object) as String
+
+  print "command is ";evt.command
+  cmd = evt.command
   ret = "unhandled"
+  if m.extvideo.state="none" then
+    ret="error.generic"
+  end if
   if validateTransportControl(evt) and m.ExtVideo.visible = true
     ret = "success"
     cmd = evt.command
@@ -405,15 +414,17 @@ Function handleTransport(evt as object) as String
         setProgressMode()
     else if cmd = "pause" or cmd = "stop"
         if (m.ExtVideo.state = "paused")
-            ret = "error.redundant"
-        else if isSeeking()
-            position = m.trickPosition * m.trickInterval
-            pauseSeeking("pause", position)
+          ret = "error.redundant"
         else
-            position = m.ExtVideo.position
+          if isSeeking()
+              position = m.trickPosition * m.trickInterval
+              pauseSeeking("pause", position)
+          else
+              position = m.ExtVideo.position
+          end if
+          showProgressBar(position)
+          m.ExtVideo.control = "pause"
         end if
-        showProgressBar(position)
-        m.ExtVideo.control = "pause"
     else if cmd = "play" or cmd = "resume"
         if m.ExtVideo.state <> "playing"
             if isSeeking()
@@ -429,11 +440,19 @@ Function handleTransport(evt as object) as String
     else if cmd = "next"
         ' skip to next content in playlist'
         m.ExtVideo.control = "skipcontent"
+    else if cmd = "nowplaying"
+        parent=m.top.getparent()
+        vid_metadata=m.top.content.getchild(m.top.contentindex)
+        vidtitle=vid_metadata.title
+        'prepend "Sample" to string top demonstrate client control of Now Playing response'
+        nowplaying={ContentType:"episode",contentTitle:"Sample, "+vidtitle}
+        m.appmanager.setfield("Title",nowplaying)
+        ret = "success"
     else
         ret = "unhandled"
     end if
   else
-    ret = "error.no-media"
+    ret = "error.generic"
   end if
   m.lastCmd = cmd
   return ret
@@ -492,3 +511,8 @@ Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back butt
 
 	return true
 end Function
+
+function stop_appmgr()
+PRINT "APP MANAGER STOP"
+m.top.appmanager.control="STOP"
+end function

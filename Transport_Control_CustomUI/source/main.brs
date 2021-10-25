@@ -15,10 +15,6 @@ sub Main(args)
     m.global.addField("deeplink", "assocarray", false)
     m.global.deeplink = deeplink
     m.global.addField("version", "string", false)
-    m.global.version = getOSVersion()    ' format OS major + minor, e.g 900 or 910'
-    ? "m.global.version= "; m.global.version
-
-
     screen.show()
 
     while(true)  'Listens to see if screen is closed
@@ -35,23 +31,11 @@ end sub
 
 Function getDeepLinks(args) as Object
     deeplink = Invalid
-
     if args.contentid <> Invalid and args.mediaType <> Invalid
         deeplink = {
             id: args.contentId
             type: args.mediaType
         }
     end if
-
     return deeplink
-end Function
-
-Function getOsVersion() as string
-  version = createObject("roDeviceInfo").GetVersion()
-
-  major = Mid(version, 3, 1)
-  minor = Mid(version, 5, 2)
-  'build = Mid(version, 8, 5)
-
-  return major + minor
 end Function
